@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-app-primary: #25D366;
+  --color-app-dark: #075e54;
+  --color-app-header: #075e54;
+  --color-app-sidebar: #ffffff;
+  --color-app-chat-bg: #e5ddd5;
+  --color-app-inbound: #dcf8c6;
+  --color-app-outbound: #ffffff;
+}
+
+/* WhatsApp (default) */
+[data-theme="whatsapp"] {
+  --color-app-primary: #25D366;
+  --color-app-dark: #075e54;
+  --color-app-header: #075e54;
+  --color-app-sidebar: #ffffff;
+  --color-app-chat-bg: #e5ddd5;
+  --color-app-inbound: #dcf8c6;
+  --color-app-outbound: #ffffff;
+}
+
+/* Viber */
+[data-theme="viber"] {
+  --color-app-primary: #7360F2;
+  --color-app-dark: #59267c;
+  --color-app-header: #59267c;
+  --color-app-sidebar: #ffffff;
+  --color-app-chat-bg: #ede4f5;
+  --color-app-inbound: #e6dbf5;
+  --color-app-outbound: #ffffff;
+}
+
+/* Facebook Messenger */
+[data-theme="facebook"] {
+  --color-app-primary: #0084FF;
+  --color-app-dark: #0064d1;
+  --color-app-header: #0064d1;
+  --color-app-sidebar: #ffffff;
+  --color-app-chat-bg: #f0f2f5;
+  --color-app-inbound: #d9e7ff;
+  --color-app-outbound: #ffffff;
+}
+
+/* Instagram */
+[data-theme="instagram"] {
+  --color-app-primary: #E1306C;
+  --color-app-dark: #833AB4;
+  --color-app-header: #833AB4;
+  --color-app-sidebar: #ffffff;
+  --color-app-chat-bg: #faf0f5;
+  --color-app-inbound: #fce4ec;
+  --color-app-outbound: #ffffff;
+}
+
+/* Telegram */
+[data-theme="telegram"] {
+  --color-app-primary: #0088cc;
+  --color-app-dark: #1a6b9c;
+  --color-app-header: #1a6b9c;
+  --color-app-sidebar: #ffffff;
+  --color-app-chat-bg: #d9e8f3;
+  --color-app-inbound: #d0ebff;
+  --color-app-outbound: #ffffff;
+}

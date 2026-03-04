@@ -1,0 +1,1 @@
+Jeboje ljeb - instrukcije posle
