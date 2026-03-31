@@ -48,6 +48,9 @@ export async function sendInboundWebhook(message: Message, contact: Contact) {
 
   broadcast('webhook:new', logEntry)
 
+  // Signal frontend that bot is processing (typing indicator)
+  broadcast('typing:start', { contactPhone: contact.phoneNumber })
+
   try {
     const response = await fetch(webhookUrl, {
       method: 'POST',

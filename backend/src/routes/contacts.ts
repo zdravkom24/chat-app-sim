@@ -16,9 +16,17 @@ export async function contactsRoutes(app: FastifyInstance) {
     return contact
   })
 
-  app.post<{ Body: { name: string; phoneNumber: string; avatarUrl?: string; platform?: string } }>('/', async (request) => {
+  app.post<{ Body: { name: string; phoneNumber: string; avatarUrl?: string; platform?: string } }>('/', async (request, reply) => {
     const { name, phoneNumber, avatarUrl, platform: p } = request.body
     const platform = (p || 'whatsapp') as Platform
+
+    const existing = db.select().from(contacts)
+      .where(and(eq(contacts.phoneNumber, phoneNumber), eq(contacts.platform, platform)))
+      .get()
+
+    if (existing) {
+      return reply.status(409).send({ error: 'Contact with this phone number already exists on this platform' })
+    }
 
     const contact = db.insert(contacts).values({
       name,

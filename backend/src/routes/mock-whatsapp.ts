@@ -17,7 +17,9 @@ export async function mockWhatsappRoutes(app: FastifyInstance) {
     Params: { phoneNumberId: string }
     Body: {
       messaging_product: string
-      to: string
+      to?: string
+      status?: string
+      message_id?: string
       type?: string
       text?: { body: string }
       interactive?: Record<string, unknown>
@@ -26,10 +28,41 @@ export async function mockWhatsappRoutes(app: FastifyInstance) {
       audio?: Record<string, unknown>
       document?: Record<string, unknown>
       template?: Record<string, unknown>
+      typing_indicator?: Record<string, unknown>
     }
   }>('/:phoneNumberId/messages', async (request, reply) => {
     const body = request.body
+
+    // Handle status updates (mark as read, typing indicator)
+    if (body.status === 'read' && body.message_id) {
+      // Update message status in DB
+      const msg = db.select().from(messages)
+        .where(eq(messages.wamid, body.message_id))
+        .get()
+      if (msg) {
+        db.update(messages)
+          .set({ status: 'read' })
+          .where(eq(messages.wamid, body.message_id))
+          .run()
+        broadcast('message:status', { wamid: body.message_id, status: 'read' })
+      }
+      return { success: true }
+    }
+
+    // Handle typing indicator — don't store as a message
+    if (body.typing_indicator) {
+      const typingPhone = body.to
+      if (typingPhone) {
+        broadcast('typing:start', { contactPhone: typingPhone })
+      }
+      return { success: true }
+    }
+
     const recipientPhone = body.to
+    if (!recipientPhone) {
+      return reply.status(400).send({ error: 'Missing "to" field' })
+    }
+
     const messageType = body.type || 'text'
     const wamid = `wamid.${crypto.randomBytes(16).toString('hex')}`
 
@@ -88,8 +121,9 @@ export async function mockWhatsappRoutes(app: FastifyInstance) {
       .where(eq(conversations.id, convo.id))
       .run()
 
-    // push to frontend
+    // push to frontend + stop typing indicator
     broadcast('message:new', { message, conversationId: convo.id })
+    broadcast('typing:stop', { contactPhone: recipientPhone })
 
     // fire status webhooks asynchronously
     fireStatusWebhooks(wamid, recipientPhone).catch((err) => {
@@ -105,8 +139,11 @@ export async function mockWhatsappRoutes(app: FastifyInstance) {
 
   // GET /:mediaId - media metadata retrieval
   app.get<{ Params: { mediaId: string } }>('/:mediaId', async (request) => {
+    // Use the request host so callers (including Docker containers) can reach the download URL
+    const host = request.headers.host || 'localhost:3000'
+    const protocol = request.protocol || 'http'
     return {
-      url: `http://localhost:4090/api/media/${request.params.mediaId}/download`,
+      url: `${protocol}://${host}/api/media/${request.params.mediaId}/download`,
       mime_type: 'image/jpeg',
       sha256: crypto.randomBytes(32).toString('hex'),
       file_size: 0,

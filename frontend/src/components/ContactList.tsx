@@ -9,14 +9,16 @@ interface Props {
   onSelect: (id: number) => void
   onSettingsClick: () => void
   onLogsClick: () => void
+  onTestsClick: () => void
   onBack: () => void
 }
 
-export default function ContactList({ platform, activeId, onSelect, onSettingsClick, onLogsClick, onBack }: Props) {
+export default function ContactList({ platform, activeId, onSelect, onSettingsClick, onLogsClick, onTestsClick, onBack }: Props) {
   const queryClient = useQueryClient()
   const [showNewContact, setShowNewContact] = useState(false)
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
+  const [createError, setCreateError] = useState('')
 
   const { data: conversations = [] } = useQuery({
     queryKey: ['conversations', platform],
@@ -30,6 +32,10 @@ export default function ContactList({ platform, activeId, onSelect, onSettingsCl
       setShowNewContact(false)
       setNewName('')
       setNewPhone('')
+      setCreateError('')
+    },
+    onError: (error: Error) => {
+      setCreateError(error.message)
     },
   })
 
@@ -69,6 +75,15 @@ export default function ContactList({ platform, activeId, onSelect, onSettingsCl
           <h1 className="text-lg font-semibold text-white">Chat Sim</h1>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={onTestsClick}
+            className="rounded p-1.5 text-white/80 hover:text-white hover:bg-white/10"
+            title="Test Scripts"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
           <button
             onClick={onLogsClick}
             className="rounded p-1.5 text-white/80 hover:text-white hover:bg-white/10"
@@ -134,6 +149,9 @@ export default function ContactList({ platform, activeId, onSelect, onSettingsCl
             onChange={(e) => setNewPhone(e.target.value)}
             className="mb-2 w-full rounded border border-gray-300 px-3 py-1.5 text-sm focus:border-app-primary focus:outline-none"
           />
+          {createError && (
+            <p className="mb-2 text-xs text-red-600">{createError}</p>
+          )}
           <div className="flex gap-2">
             <button
               onClick={() => createContact.mutate({ name: newName, phoneNumber: newPhone })}

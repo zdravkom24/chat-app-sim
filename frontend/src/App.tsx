@@ -7,12 +7,14 @@ import ContactList from '@/components/ContactList'
 import ChatWindow from '@/components/ChatWindow'
 import Settings from '@/components/Settings'
 import WebhookLogViewer from '@/components/WebhookLogViewer'
+import TestScripts from '@/components/TestScripts'
 
 export default function App() {
   const [platform, setPlatform] = useState<Platform | null>(null)
   const [activeConversation, setActiveConversation] = useState<number | null>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [showWebhookLogs, setShowWebhookLogs] = useState(false)
+  const [showTestScripts, setShowTestScripts] = useState(false)
   const queryClient = useQueryClient()
   const { on } = useWebSocket()
 
@@ -57,11 +59,13 @@ export default function App() {
         onSelect={setActiveConversation}
         onSettingsClick={() => setShowSettings(true)}
         onLogsClick={() => setShowWebhookLogs(true)}
+        onTestsClick={() => setShowTestScripts(true)}
         onBack={() => { setPlatform(null); setActiveConversation(null) }}
       />
       <ChatWindow conversationId={activeConversation} />
       {showSettings && <Settings onClose={() => setShowSettings(false)} />}
       {showWebhookLogs && <WebhookLogViewer onClose={() => setShowWebhookLogs(false)} />}
+      {showTestScripts && <TestScripts onClose={() => setShowTestScripts(false)} />}
     </div>
   )
 }

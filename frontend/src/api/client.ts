@@ -7,7 +7,10 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     headers: { 'Content-Type': 'application/json' },
     ...options,
   })
-  if (!response.ok) throw new Error(`API error: ${response.status}`)
+  if (!response.ok) {
+    const body = await response.json().catch(() => null)
+    throw new Error(body?.error || `API error: ${response.status}`)
+  }
   return response.json()
 }
 
@@ -29,6 +32,15 @@ export const api = {
     list: (conversationId: number) => request<Message[]>(`/messages/${conversationId}`),
     send: (data: { conversationId: number; type: string; content: Record<string, unknown> }) =>
       request<Message>('/messages/send', { method: 'POST', body: JSON.stringify(data) }),
+  },
+  media: {
+    upload: async (file: File): Promise<{ mediaId: string; filename: string; mimeType: string }> => {
+      const formData = new FormData()
+      formData.append('file', file)
+      const response = await fetch(`${BASE_URL}/media/upload`, { method: 'POST', body: formData })
+      if (!response.ok) throw new Error('Upload failed')
+      return response.json()
+    },
   },
   settings: {
     get: () => request<Settings>('/settings'),

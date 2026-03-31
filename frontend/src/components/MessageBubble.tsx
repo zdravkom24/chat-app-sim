@@ -28,15 +28,33 @@ export default function MessageBubble({ message, onInteraction }: Props) {
         return <InteractiveMessage interactive={interactive} onAction={onInteraction} />
       }
 
-      case 'image':
+      case 'image': {
+        // Try to get a displayable image URL
+        const mediaId = (parsed.mediaId as string) ?? (parsed.image as Record<string, unknown>)?.id as string | undefined
+        const imageCaption = (parsed.caption as string) ?? (parsed.image as Record<string, unknown>)?.caption as string | undefined ?? ''
+        const imageUrl = mediaId ? `/api/media/${mediaId}/download` : null
+
         return (
-          <div className="flex items-center gap-2 text-gray-500">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span className="text-sm">{(parsed.caption as string) || 'Image'}</span>
+          <div>
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt={imageCaption || 'Image'}
+                className="max-w-full rounded-md max-h-64 object-contain"
+                loading="lazy"
+              />
+            ) : (
+              <div className="flex items-center gap-2 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-sm">Image</span>
+              </div>
+            )}
+            {imageCaption && <p className="text-sm mt-1">{imageCaption}</p>}
           </div>
         )
+      }
 
       case 'video':
         return (
