@@ -39,17 +39,17 @@ export default function WebhookLogViewer({ onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex" onClick={onClose}>
-      <div className="ml-auto h-full w-full max-w-2xl bg-white shadow-xl flex flex-col" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-900">Webhook Logs</h2>
+      <div className="ml-auto h-full w-full max-w-2xl bg-white dark:bg-gray-900 shadow-xl flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Webhook Logs</h2>
           <div className="flex gap-2">
             <button
               onClick={() => clearLogs.mutate()}
-              className="rounded border border-red-300 px-3 py-1.5 text-xs text-red-600 hover:bg-red-50"
+              className="rounded border border-red-300 dark:border-red-700 px-3 py-1.5 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30"
             >
               Clear All
             </button>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -64,10 +64,10 @@ export default function WebhookLogViewer({ onClose }: Props) {
             </div>
           ) : (
             logs.map((log: WebhookLog) => (
-              <div key={log.id} className="border-b border-gray-100">
+              <div key={log.id} className="border-b border-gray-100 dark:border-gray-700">
                 <button
                   onClick={() => setExpandedId(expandedId === log.id ? null : log.id)}
-                  className="flex w-full items-center gap-3 px-6 py-3 text-left hover:bg-gray-50"
+                  className="flex w-full items-center gap-3 px-6 py-3 text-left hover:bg-gray-50 dark:hover:bg-white/5"
                 >
                   <span
                     className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -78,7 +78,7 @@ export default function WebhookLogViewer({ onClose }: Props) {
                   >
                     {log.direction === 'outgoing' ? 'OUT' : 'IN'}
                   </span>
-                  <span className="flex-1 text-sm font-mono text-gray-700 truncate">
+                  <span className="flex-1 text-sm font-mono text-gray-700 dark:text-gray-300 truncate">
                     {log.method} {log.url}
                   </span>
                   <span className={`text-sm font-medium ${getStatusColor(log.responseStatus)}`}>
@@ -90,16 +90,16 @@ export default function WebhookLogViewer({ onClose }: Props) {
                 </button>
 
                 {expandedId === log.id && (
-                  <div className="bg-gray-50 px-6 py-4 space-y-3">
+                  <div className="bg-gray-50 dark:bg-gray-800 px-6 py-4 space-y-3">
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-500 uppercase mb-1">Request Body</h4>
+                      <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">Request Body</h4>
                       <pre className="max-h-60 overflow-auto rounded bg-gray-900 p-3 text-xs text-green-400 font-mono">
                         {formatJson(log.body)}
                       </pre>
                     </div>
                     {log.responseBody && (
                       <div>
-                        <h4 className="text-xs font-semibold text-gray-500 uppercase mb-1">Response</h4>
+                        <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">Response</h4>
                         <pre className="max-h-40 overflow-auto rounded bg-gray-900 p-3 text-xs text-green-400 font-mono">
                           {formatJson(log.responseBody)}
                         </pre>

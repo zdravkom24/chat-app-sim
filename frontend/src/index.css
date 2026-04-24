@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where([data-dark="true"], [data-dark="true"] *));
+
 @theme {
   --color-app-primary: #25D366;
   --color-app-dark: #075e54;
@@ -63,4 +65,53 @@
   --color-app-chat-bg: #d9e8f3;
   --color-app-inbound: #d0ebff;
   --color-app-outbound: #ffffff;
+}
+
+/* ── Dark mode theme overrides ── */
+
+[data-dark="true"] {
+  --color-app-sidebar: #111b21;
+  --color-app-chat-bg: #0b141a;
+  --color-app-inbound: #1a3a2a;
+  --color-app-outbound: #1f2c34;
+}
+
+[data-dark="true"][data-theme="whatsapp"] {
+  --color-app-header: #1a2e28;
+  --color-app-sidebar: #111b21;
+  --color-app-chat-bg: #0b141a;
+  --color-app-inbound: #1a3a2a;
+  --color-app-outbound: #1f2c34;
+}
+
+[data-dark="true"][data-theme="viber"] {
+  --color-app-header: #2d1b4e;
+  --color-app-sidebar: #151520;
+  --color-app-chat-bg: #0d0d15;
+  --color-app-inbound: #2a2045;
+  --color-app-outbound: #1e1e2e;
+}
+
+[data-dark="true"][data-theme="facebook"] {
+  --color-app-header: #1a1d24;
+  --color-app-sidebar: #18191a;
+  --color-app-chat-bg: #0e0e10;
+  --color-app-inbound: #1a2a45;
+  --color-app-outbound: #242526;
+}
+
+[data-dark="true"][data-theme="instagram"] {
+  --color-app-header: #2a1a35;
+  --color-app-sidebar: #1a1a2e;
+  --color-app-chat-bg: #121212;
+  --color-app-inbound: #2d1a2a;
+  --color-app-outbound: #262626;
+}
+
+[data-dark="true"][data-theme="telegram"] {
+  --color-app-header: #1a2733;
+  --color-app-sidebar: #17212b;
+  --color-app-chat-bg: #0e1621;
+  --color-app-inbound: #182533;
+  --color-app-outbound: #1d2a36;
 }

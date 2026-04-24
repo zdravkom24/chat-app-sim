@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, inArray } from 'drizzle-orm'
 import { db } from '../db/index.js'
-import { contacts, conversations } from '../db/schema.js'
+import { contacts, conversations, messages } from '../db/schema.js'
 import type { Platform } from '../db/schema.js'
 
 export async function contactsRoutes(app: FastifyInstance) {
@@ -61,11 +61,40 @@ export async function contactsRoutes(app: FastifyInstance) {
     },
   )
 
+  app.delete<{ Querystring: { platform?: string } }>('/', async (request) => {
+    const platform = (request.query.platform || 'whatsapp') as Platform
+    const allContacts = db.select({ id: contacts.id }).from(contacts).where(eq(contacts.platform, platform)).all()
+    const contactIds = allContacts.map(c => c.id)
+    if (contactIds.length > 0) {
+      const convos = db.select({ id: conversations.id })
+        .from(conversations)
+        .where(inArray(conversations.contactId, contactIds))
+        .all()
+      const convIds = convos.map(c => c.id)
+      if (convIds.length > 0) {
+        db.delete(messages).where(inArray(messages.conversationId, convIds)).run()
+      }
+      db.delete(conversations).where(inArray(conversations.contactId, contactIds)).run()
+      db.delete(contacts).where(inArray(contacts.id, contactIds)).run()
+    }
+    return { success: true }
+  })
+
   app.delete<{ Params: { id: string } }>('/:id', async (request, reply) => {
     const id = Number(request.params.id)
     const existing = db.select().from(contacts).where(eq(contacts.id, id)).get()
     if (!existing) return reply.status(404).send({ error: 'Contact not found' })
 
+    // Cascade delete: messages → conversations → contact
+    const convos = db.select({ id: conversations.id })
+      .from(conversations)
+      .where(eq(conversations.contactId, id))
+      .all()
+    const convIds = convos.map(c => c.id)
+    if (convIds.length > 0) {
+      db.delete(messages).where(inArray(messages.conversationId, convIds)).run()
+    }
+    db.delete(conversations).where(eq(conversations.contactId, id)).run()
     db.delete(contacts).where(eq(contacts.id, id)).run()
     return { success: true }
   })

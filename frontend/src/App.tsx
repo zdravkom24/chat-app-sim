@@ -15,6 +15,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
   const [showWebhookLogs, setShowWebhookLogs] = useState(false)
   const [showTestScripts, setShowTestScripts] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('chat-sim-dark-mode') === 'true')
   const queryClient = useQueryClient()
   const { on } = useWebSocket()
 
@@ -25,6 +26,15 @@ export default function App() {
       document.documentElement.removeAttribute('data-theme')
     }
   }, [platform])
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.setAttribute('data-dark', 'true')
+    } else {
+      document.documentElement.removeAttribute('data-dark')
+    }
+    localStorage.setItem('chat-sim-dark-mode', String(darkMode))
+  }, [darkMode])
 
   useEffect(() => {
     const unsub1 = on('message:new', () => {
@@ -48,7 +58,7 @@ export default function App() {
   }, [on, queryClient])
 
   if (!platform) {
-    return <PlatformSelect onSelect={setPlatform} />
+    return <PlatformSelect onSelect={setPlatform} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(d => !d)} />
   }
 
   return (
@@ -61,11 +71,16 @@ export default function App() {
         onLogsClick={() => setShowWebhookLogs(true)}
         onTestsClick={() => setShowTestScripts(true)}
         onBack={() => { setPlatform(null); setActiveConversation(null) }}
+        onDelete={(conversationId) => {
+          if (activeConversation === conversationId) setActiveConversation(null)
+        }}
+        darkMode={darkMode}
+        onToggleDarkMode={() => setDarkMode(d => !d)}
       />
       <ChatWindow conversationId={activeConversation} />
       {showSettings && <Settings onClose={() => setShowSettings(false)} />}
       {showWebhookLogs && <WebhookLogViewer onClose={() => setShowWebhookLogs(false)} />}
-      {showTestScripts && <TestScripts onClose={() => setShowTestScripts(false)} />}
+      {showTestScripts && <TestScripts onClose={() => setShowTestScripts(false)} activeConversationId={activeConversation} />}
     </div>
   )
 }

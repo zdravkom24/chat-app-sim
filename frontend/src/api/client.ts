@@ -4,8 +4,8 @@ const BASE_URL = '/api'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers: options?.body ? { 'Content-Type': 'application/json' } : undefined,
   })
   if (!response.ok) {
     const body = await response.json().catch(() => null)
@@ -23,6 +23,8 @@ export const api = {
       request<Contact>(`/contacts/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id: number) =>
       request<{ success: boolean }>(`/contacts/${id}`, { method: 'DELETE' }),
+    deleteAll: (platform: Platform) =>
+      request<{ success: boolean }>(`/contacts?platform=${platform}`, { method: 'DELETE' }),
   },
   conversations: {
     list: (platform: Platform) => request<Conversation[]>(`/conversations?platform=${platform}`),

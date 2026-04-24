@@ -38,7 +38,7 @@ export default function InteractiveMessage({ interactive, onAction }: Props) {
     return (
       <div>
         <p className="whitespace-pre-wrap wrap-break-words mb-2">{body}</p>
-        <div className="flex flex-col gap-1 border-t border-gray-200 pt-1.5">
+        <div className="flex flex-col gap-1 border-t border-gray-200 dark:border-gray-600 pt-1.5">
           {buttons.map((btn) => (
             <button
               key={btn.reply.id}
@@ -66,7 +66,7 @@ export default function InteractiveMessage({ interactive, onAction }: Props) {
     return (
       <div>
         <p className="whitespace-pre-wrap wrap-break-words mb-2">{body}</p>
-        <div className="border-t border-gray-200 pt-1.5">
+        <div className="border-t border-gray-200 dark:border-gray-600 pt-1.5">
           <button
             onClick={() => setListOpen(!listOpen)}
             className="w-full rounded border border-app-primary/30 px-3 py-1.5 text-sm font-medium text-app-dark hover:bg-app-primary/10 transition-colors"
@@ -75,21 +75,21 @@ export default function InteractiveMessage({ interactive, onAction }: Props) {
           </button>
 
           {listOpen && action?.sections && (
-            <div className="mt-2 max-h-60 overflow-y-auto rounded border border-gray-200 bg-white">
+            <div className="mt-2 max-h-60 overflow-y-auto rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
               {action.sections.map((section) => (
                 <div key={section.title}>
-                  <div className="bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-500 uppercase">
+                  <div className="bg-gray-50 dark:bg-gray-700 px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
                     {section.title}
                   </div>
                   {section.rows.map((row) => (
                     <button
                       key={row.id}
                       onClick={() => handleListSelect(row)}
-                      className="w-full px-3 py-2 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                      className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600 last:border-0"
                     >
-                      <div className="text-sm font-medium text-gray-900">{row.title}</div>
+                      <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{row.title}</div>
                       {row.description && (
-                        <div className="text-xs text-gray-500">{row.description}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{row.description}</div>
                       )}
                     </button>
                   ))}

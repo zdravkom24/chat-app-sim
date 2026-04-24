@@ -123,7 +123,7 @@ export default function ChatWindow({ conversationId }: Props) {
 
   if (!conversationId) {
     return (
-      <div className="flex flex-1 items-center justify-center bg-gray-50">
+      <div className="flex flex-1 items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center text-gray-400">
           <p className="text-lg">Select a conversation to start chatting</p>
           <p className="mt-1 text-sm">Or create a new contact</p>
@@ -173,7 +173,7 @@ export default function ChatWindow({ conversationId }: Props) {
       </div>
 
       {/* Input */}
-      <div className="flex items-center gap-2 border-t border-gray-200 bg-gray-50 px-4 py-2">
+      <div className="flex items-center gap-2 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-4 py-2">
         {/* Attachment button */}
         <input
           ref={fileInputRef}
@@ -184,7 +184,7 @@ export default function ChatWindow({ conversationId }: Props) {
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-200"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
           title="Attach file"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -197,7 +197,7 @@ export default function ChatWindow({ conversationId }: Props) {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           placeholder="Type a message..."
-          className="flex-1 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm focus:border-app-primary focus:outline-none"
+          className="flex-1 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-gray-100 px-4 py-2 text-sm focus:border-app-primary focus:outline-none"
         />
         <button
           onClick={handleSend}

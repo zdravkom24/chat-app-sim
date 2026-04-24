@@ -15,7 +15,6 @@ export interface TestScenario {
 export interface TestCategory {
   id: string
   name: string
-  emoji: string
   description: string
   scenarios: TestScenario[]
 }
@@ -27,7 +26,6 @@ export const testScripts: TestCategory[] = [
   {
     id: 'ideal',
     name: 'Der Ideale Kunde',
-    emoji: '🎯',
     description: 'Perfect flow - customer follows every step',
     scenarios: [
       {
@@ -107,7 +105,6 @@ export const testScripts: TestCategory[] = [
   {
     id: 'curious',
     name: 'Der Neugierige',
-    emoji: '🤔',
     description: 'Asks questions mid-flow, still orders',
     scenarios: [
       {
@@ -184,7 +181,6 @@ export const testScripts: TestCategory[] = [
   {
     id: 'clueless',
     name: 'Der Planlose',
-    emoji: '😅',
     description: 'No idea what to do, needs guidance',
     scenarios: [
       {
@@ -244,7 +240,6 @@ export const testScripts: TestCategory[] = [
   {
     id: 'indecisive',
     name: 'Der Wechselhafte',
-    emoji: '🔄',
     description: 'Changes VIN, changes mind, restarts',
     scenarios: [
       {
@@ -318,7 +313,6 @@ export const testScripts: TestCategory[] = [
   {
     id: 'needs-human',
     name: 'Der Unerfahrene',
-    emoji: '🆘',
     description: 'Needs human help immediately',
     scenarios: [
       {
@@ -357,7 +351,6 @@ export const testScripts: TestCategory[] = [
   {
     id: 'natural',
     name: 'Der Natürliche',
-    emoji: '💬',
     description: 'Natural conversation, info across messages',
     scenarios: [
       {
@@ -426,7 +419,6 @@ export const testScripts: TestCategory[] = [
   {
     id: 'stress',
     name: 'Stresstest',
-    emoji: '⚡',
     description: 'Edge cases and weird inputs',
     scenarios: [
       {
@@ -503,7 +495,6 @@ export const testScripts: TestCategory[] = [
   {
     id: 'multi-session',
     name: 'Multi-Session',
-    emoji: '🔁',
     description: 'Returning customer, saved vehicles',
     scenarios: [
       {

@@ -115,9 +115,9 @@ export default function MessageBubble({ message, onInteraction }: Props) {
           isInbound ? 'bg-app-inbound' : 'bg-app-outbound'
         }`}
       >
-        {renderContent()}
+        <div className="dark:text-gray-100">{renderContent()}</div>
         <div className="mt-0.5 flex items-center justify-end gap-1">
-          <span className="text-[11px] text-gray-500">
+          <span className="text-[11px] text-gray-500 dark:text-gray-400">
             {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
           {renderStatus()}
